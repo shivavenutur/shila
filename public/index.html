@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>Search</title>
+<style>
+*{box-sizing:border-box}
+html,body{height:100%;margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;background:#fff;color:#202124}
+button{font:inherit;cursor:pointer;border:0;background:none}
+/* search page */
+#search{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;gap:26px;padding:16px}
+#logo{font-size:64px;font-weight:500;letter-spacing:-2px;color:#4285f4}
+#logo b:nth-child(2){color:#ea4335}#logo b:nth-child(3){color:#fbbc05}#logo b:nth-child(4){color:#4285f4}#logo b:nth-child(5){color:#34a853}#logo b:nth-child(6){color:#ea4335}
+#sbox{width:min(580px,100%);height:46px;border:1px solid #dfe1e5;border-radius:24px;padding:0 20px;font-size:16px;outline:none}
+#sbox:hover,#sbox:focus{box-shadow:0 1px 6px rgba(32,33,36,.28);border-color:transparent}
+#sgo{background:#f8f9fa;border:1px solid #f8f9fa;border-radius:4px;padding:10px 16px;color:#3c4043;font-size:14px}
+#sgo:hover{border-color:#dadce0}
+/* chat */
+#chat{display:none;height:100%;height:100dvh;flex-direction:column;max-width:900px;margin:0 auto;background:#efeae2;box-shadow:0 0 20px rgba(0,0,0,.15)}
+header{background:#075e54;color:#fff;display:flex;align-items:center;gap:10px;padding:10px 12px;padding-top:calc(10px + env(safe-area-inset-top,0px))}
+header .av{width:40px;height:40px;border-radius:50%;background:#25d366;display:grid;place-items:center;font-weight:600}
+header .who{flex:1;line-height:1.2}header small{opacity:.8}
+header button{color:#fff;font-size:20px;padding:6px 8px;border-radius:50%}
+header button:hover{background:rgba(255,255,255,.15)}
+#menu{display:none;position:absolute;right:10px;top:56px;background:#fff;color:#111;border-radius:6px;box-shadow:0 4px 16px rgba(0,0,0,.25);z-index:5}
+#menu button{display:block;width:100%;text-align:left;padding:12px 20px}#menu button:hover{background:#f0f2f5}
+#list{flex:1;overflow-y:auto;padding:14px 10px;display:flex;flex-direction:column;gap:4px}
+.m{max-width:78%;padding:6px 9px;border-radius:8px;background:#fff;align-self:flex-start;box-shadow:0 1px 1px rgba(0,0,0,.13);word-wrap:break-word;white-space:pre-wrap}
+.m.me{background:#d9fdd3;align-self:flex-end}
+.m img,.m video{max-width:100%;max-height:300px;border-radius:6px;display:block;margin-bottom:4px}
+.m audio{max-width:100%}
+.m .t{font-size:11px;color:#667781;text-align:right;margin-top:2px}
+.m .x{font-size:12px;opacity:.5;padding:0 0 0 8px}.m .x:hover{opacity:1}
+.m a{color:#027eb5}
+footer{display:flex;align-items:center;gap:8px;padding:8px;padding-bottom:calc(8px + env(safe-area-inset-bottom,0px));background:#f0f2f5}
+footer input[type=text]{flex:1;border:0;border-radius:22px;padding:11px 16px;font-size:16px;outline:none}
+footer button{font-size:22px;padding:6px}
+#send{background:#075e54;color:#fff;border-radius:50%;width:42px;height:42px;font-size:18px;padding:0}
+/* calls */
+#call{display:none;position:fixed;inset:0;background:#111;z-index:20;flex-direction:column;align-items:center;justify-content:center}
+#remote{width:100%;height:100%;object-fit:cover;background:#111}
+#local{position:absolute;right:14px;top:14px;width:110px;border-radius:10px;background:#000;transform:scaleX(-1)}
+#cstat{position:absolute;top:18px;left:0;right:0;text-align:center;color:#fff;text-shadow:0 1px 4px #000}
+#cbar{position:absolute;bottom:calc(30px + env(safe-area-inset-bottom,0px));display:flex;gap:18px}
+#cbar button{width:56px;height:56px;border-radius:50%;background:#333;color:#fff;font-size:22px}
+#cbar #hang{background:#e53935}
+#incoming{display:none;position:fixed;left:50%;top:20px;transform:translateX(-50%);background:#fff;border-radius:12px;padding:16px 20px;box-shadow:0 6px 24px rgba(0,0,0,.35);z-index:30;text-align:center}
+#incoming button{margin:10px 6px 0;padding:9px 18px;border-radius:20px;color:#fff;font-size:15px}
+</style></head><body>
+
+<div id="search">
+  <div id="logo"><b>S</b><b>e</b><b>a</b><b>r</b><b>c</b><b>h</b></div>
+  <input id="sbox" name="search" type="text" placeholder="Search" autocomplete="off" autocapitalize="off" spellcheck="false" autofocus>
+  <button id="sgo">Search</button>
+</div>
+
+<div id="chat">
+  <header>
+    <div class="av" id="av">?</div>
+    <div class="who"><div id="name">Chat</div><small id="pres">offline</small></div>
+    <button id="vc" title="Voice call">📞</button>
+    <button id="vid" title="Video call">🎥</button>
+    <button id="dots" title="Menu">⋮</button>
+    <div id="menu"><button id="clr">Clear chat</button><button id="lock">Lock</button></div>
+  </header>
+  <div id="list"></div>
+  <footer>
+    <button id="att" title="Attach">📎</button>
+    <input type="file" id="file" hidden accept="image/*,video/*,audio/*,.pdf,.doc,.docx,.txt,.zip">
+    <input type="text" id="inp" placeholder="Type a message" autocomplete="off">
+    <button id="send">➤</button>
+  </footer>
+</div>
+
+<div id="incoming"><div id="inTxt"></div>
+  <button id="acc" style="background:#25d366">Accept</button><button id="dec" style="background:#e53935">Decline</button></div>
+<div id="call">
+  <video id="remote" autoplay playsinline></video>
+  <video id="local" autoplay playsinline muted></video>
+  <div id="cstat"></div>
+  <div id="cbar"><button id="mute">🎤</button><button id="cam">📷</button><button id="hang">✕</button></div>
+</div>
+
+<script src="/socket.io/socket.io.js"></script>
+<script>
+const $ = (id) => document.getElementById(id);
+let socket, me = null, tried = '';
+
+/* ---------- search / secret code ---------- */
+function googleSearch(q){ if(q) location.href = 'https://www.google.com/search?q=' + encodeURIComponent(q); }
+function doSearch(){
+  const v = $('sbox').value.trim();
+  if(/^\d{4}$/.test(v)){
+    tried = v;
+    socket = io({ auth:{ code:v }, reconnection:false });
+    socket.on('connect_error', () => { socket.close(); googleSearch(v); }); // wrong code → ordinary Google search
+    socket.on('init', (d) => enter(d));
+  } else googleSearch(v);
+}
+$('sbox').addEventListener('keydown', e => { if(e.key==='Enter') doSearch(); });
+$('sgo').onclick = doSearch;
+
+function enter(d){
+  me = d.me;
+  $('sbox').value = ''; $('search').style.display = 'none'; $('chat').style.display = 'flex';
+  document.title = 'Chat';
+  const other = me === 'A' ? 'B' : 'A';
+  $('name').textContent = 'User ' + other; $('av').textContent = other;
+  setPres(d.presence);
+  $('list').innerHTML = ''; d.messages.forEach(addMsg); scrollDown();
+  socket.on('msg', (m) => { addMsg(m); scrollDown(); });
+  socket.on('del', (id) => { document.querySelector('[data-id="'+id+'"]')?.remove(); });
+  socket.on('clear', () => { $('list').innerHTML = ''; });
+  socket.on('presence', setPres);
+  socket.on('sig', onSig);
+  socket.on('disconnect', () => { if(me) lock(); });
+}
+function setPres(on){ $('pres').textContent = on ? 'online' : 'offline'; }
+function lock(){
+  endCall(false); me = null; socket?.close();
+  $('chat').style.display = 'none'; $('search').style.display = 'flex'; $('list').innerHTML = '';
+  document.title = 'Search'; $('sbox').focus();
+}
+
+/* ---------- messages ---------- */
+function addMsg(m){
+  const d = document.createElement('div');
+  d.className = 'm' + (m.from === me ? ' me' : ''); d.dataset.id = m.id;
+  if(m.media){
+    const t = m.media.type, u = m.media.data; let el;
+    if(t.startsWith('image/')){ el = document.createElement('img'); el.src = u; }
+    else if(t.startsWith('video/')){ el = document.createElement('video'); el.src = u; el.controls = true; }
+    else if(t.startsWith('audio/')){ el = document.createElement('audio'); el.src = u; el.controls = true; }
+    else { el = document.createElement('a'); el.href = u; el.download = m.media.name; el.textContent = '📄 ' + m.media.name; }
+    d.appendChild(el);
+  }
+  if(m.text){ const s = document.createElement('span'); s.textContent = m.text; d.appendChild(s); }
+  const t = document.createElement('div'); t.className = 't';
+  t.textContent = new Date(m.t).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
+  if(m.from === me){
+    const x = document.createElement('button'); x.className = 'x'; x.textContent = '🗑'; x.title = 'Delete message';
+    x.onclick = () => socket.emit('del', m.id); t.appendChild(x);
+  }
+  d.appendChild(t); $('list').appendChild(d);
+}
+function scrollDown(){ const l = $('list'); l.scrollTop = l.scrollHeight; }
+function sendText(){ const v = $('inp').value.trim(); if(!v) return; socket.emit('msg', {text:v}); $('inp').value = ''; }
+$('send').onclick = sendText;
+$('inp').addEventListener('keydown', e => { if(e.key==='Enter') sendText(); });
+$('att').onclick = () => $('file').click();
+$('file').onchange = () => {
+  const f = $('file').files[0]; $('file').value = ''; if(!f) return;
+  if(f.size > 18*1024*1024){ alert('File too large (max 18 MB).'); return; }
+  const r = new FileReader();
+  r.onload = () => socket.emit('msg', { text:$('inp').value.trim(), media:{ name:f.name, type:f.type, data:r.result } }) || ($('inp').value = '');
+  r.readAsDataURL(f);
+};
+$('dots').onclick = (e) => { e.stopPropagation(); $('menu').style.display = $('menu').style.display==='block' ? 'none' : 'block'; };
+document.addEventListener('click', () => $('menu').style.display = 'none');
+$('clr').onclick = () => { if(confirm('Clear the whole chat for both users?')) socket.emit('clear'); };
+$('lock').onclick = lock;
+
+/* ---------- voice & video calls (WebRTC) ---------- */
+const RTC = { iceServers:[{urls:'stun:stun.l.google.com:19302'}] };
+let pc, stream, pendingOffer = null, iceQ = [], wantVideo = false;
+const sig = (d) => socket.emit('sig', d);
+
+async function setup(video){
+  stream = await navigator.mediaDevices.getUserMedia({ audio:true, video });
+  pc = new RTCPeerConnection(RTC); iceQ = [];
+  stream.getTracks().forEach(t => pc.addTrack(t, stream));
+  pc.onicecandidate = e => e.candidate && sig({ type:'ice', c:e.candidate });
+  pc.ontrack = e => { $('remote').srcObject = e.streams[0]; $('cstat').textContent = ''; };
+  pc.onconnectionstatechange = () => { if(['failed','closed'].includes(pc.connectionState)) endCall(false); };
+  $('local').srcObject = stream; $('local').style.display = video ? 'block' : 'none';
+  $('cam').style.display = video ? '' : 'none';
+  $('call').style.display = 'flex';
+}
+async function startCall(video){
+  if(pc) return;
+  try{
+    await setup(video); $('cstat').textContent = 'Calling…';
+    const offer = await pc.createOffer(); await pc.setLocalDescription(offer);
+    sig({ type:'offer', sdp:offer, video });
+  }catch(e){ alert('Could not start the call: ' + e.message + '\n(Camera/mic need HTTPS and permission.)'); endCall(false); }
+}
+async function onSig(d){
+  if(d.type === 'offer'){
+    if(pc || pendingOffer) return sig({ type:'busy' });
+    pendingOffer = d; $('inTxt').textContent = 'Incoming ' + (d.video ? 'video' : 'voice') + ' call'; $('incoming').style.display = 'block';
+  } else if(d.type === 'answer'){
+    await pc?.setRemoteDescription(d.sdp); iceQ.forEach(c => pc.addIceCandidate(c)); iceQ = [];
+  } else if(d.type === 'ice'){
+    if(pc?.remoteDescription) pc.addIceCandidate(d.c); else iceQ.push(d.c);
+  } else if(d.type === 'end' || d.type === 'busy' || d.type === 'decline'){
+    if(pendingOffer){ pendingOffer = null; $('incoming').style.display = 'none'; }
+    endCall(false);
+  }
+}
+$('acc').onclick = async () => {
+  const o = pendingOffer; pendingOffer = null; $('incoming').style.display = 'none';
+  try{
+    await setup(o.video); await pc.setRemoteDescription(o.sdp);
+    iceQ.forEach(c => pc.addIceCandidate(c)); iceQ = [];
+    const a = await pc.createAnswer(); await pc.setLocalDescription(a); sig({ type:'answer', sdp:a });
+  }catch(e){ alert('Could not answer: ' + e.message); sig({ type:'decline' }); endCall(false); }
+};
+$('dec').onclick = () => { pendingOffer = null; $('incoming').style.display = 'none'; sig({ type:'decline' }); };
+function endCall(notify = true){
+  if(notify && socket?.connected) sig({ type:'end' });
+  stream?.getTracks().forEach(t => t.stop()); pc?.close(); pc = stream = null; iceQ = [];
+  $('remote').srcObject = $('local').srcObject = null; $('call').style.display = 'none';
+}
+$('vc').onclick = () => startCall(false);
+$('vid').onclick = () => startCall(true);
+$('hang').onclick = () => endCall(true);
+$('mute').onclick = () => { const t = stream?.getAudioTracks()[0]; if(t){ t.enabled = !t.enabled; $('mute').textContent = t.enabled ? '🎤' : '🔇'; } };
+$('cam').onclick = () => { const t = stream?.getVideoTracks()[0]; if(t){ t.enabled = !t.enabled; $('cam').textContent = t.enabled ? '📷' : '🚫'; } };
+</script>
+</body></html>
