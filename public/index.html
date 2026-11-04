@@ -104,20 +104,32 @@ $('sgo').onclick = doSearch;
 function enter(d){
   me = d.me;
   $('sbox').value = ''; $('search').style.display = 'none'; $('chat').style.display = 'flex';
-  document.title = 'Chat';
+  document.title = 'Chat'; resetIdle();
   const other = me === 'A' ? 'B' : 'A';
   $('name').textContent = 'User ' + other; $('av').textContent = other;
   setPres(d.presence);
   $('list').innerHTML = ''; d.messages.forEach(addMsg); scrollDown();
-  socket.on('msg', (m) => { addMsg(m); scrollDown(); });
+  socket.on('msg', (m) => { addMsg(m); scrollDown(); }); // incoming messages don't reset the timer
   socket.on('del', (id) => { document.querySelector('[data-id="'+id+'"]')?.remove(); });
   socket.on('clear', () => { $('list').innerHTML = ''; });
   socket.on('presence', setPres);
   socket.on('sig', onSig);
+  socket.on('err', (t) => alert(t));
   socket.on('disconnect', () => { if(me) lock(); });
 }
 function setPres(on){ $('pres').textContent = on ? 'online' : 'offline'; }
+const IDLE_MS = 10000; // auto-lock after 10 seconds of inactivity (change here)
+let idleT;
+function resetIdle(){
+  clearTimeout(idleT);
+  if(!me) return;
+  idleT = setTimeout(() => { if(pc || pendingOffer) resetIdle(); else lock(); }, IDLE_MS); // never lock mid-call
+}
+['mousemove','mousedown','keydown','touchstart','touchmove','scroll','click','wheel'].forEach(ev =>
+  document.addEventListener(ev, resetIdle, { passive:true, capture:true }));
+$('list').addEventListener('scroll', resetIdle, { passive:true });
 function lock(){
+  clearTimeout(idleT);
   endCall(false); me = null; socket?.close();
   $('chat').style.display = 'none'; $('search').style.display = 'flex'; $('list').innerHTML = '';
   document.title = 'Search'; $('sbox').focus();
@@ -128,7 +140,7 @@ function addMsg(m){
   const d = document.createElement('div');
   d.className = 'm' + (m.from === me ? ' me' : ''); d.dataset.id = m.id;
   if(m.media){
-    const t = m.media.type, u = m.media.data; let el;
+    const t = m.media.type, u = m.media.url || m.media.data; let el;
     if(t.startsWith('image/')){ el = document.createElement('img'); el.src = u; }
     else if(t.startsWith('video/')){ el = document.createElement('video'); el.src = u; el.controls = true; }
     else if(t.startsWith('audio/')){ el = document.createElement('audio'); el.src = u; el.controls = true; }
@@ -153,7 +165,7 @@ $('file').onchange = () => {
   const f = $('file').files[0]; $('file').value = ''; if(!f) return;
   if(f.size > 18*1024*1024){ alert('File too large (max 18 MB).'); return; }
   const r = new FileReader();
-  r.onload = () => socket.emit('msg', { text:$('inp').value.trim(), media:{ name:f.name, type:f.type, data:r.result } }) || ($('inp').value = '');
+  r.onload = () => { socket.emit('msg', { text:$('inp').value.trim(), media:{ name:f.name, type:f.type, data:r.result } }); $('inp').value = ''; };
   r.readAsDataURL(f);
 };
 $('dots').onclick = (e) => { e.stopPropagation(); $('menu').style.display = $('menu').style.display==='block' ? 'none' : 'block'; };
