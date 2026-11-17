@@ -15,8 +15,6 @@ button{font:inherit;cursor:pointer;border:0;background:none}
 #logo{font-size:64px;font-weight:500;letter-spacing:-2px;color:#e8eaed}
 #sbox{width:min(580px,100%);height:46px;border:1px solid #5f6368;border-radius:24px;padding:0 20px;font-size:16px;outline:none;background:#303134;color:#e8eaed}
 #sbox:hover,#sbox:focus{box-shadow:0 1px 6px rgba(0,0,0,.6);border-color:#8ab4f8}
-#sgo{background:#303134;border:1px solid #303134;border-radius:4px;padding:10px 16px;color:#e8eaed;font-size:14px}
-#sgo:hover{border-color:#5f6368}
 /* chat */
 #chat{display:none;height:100%;height:100dvh;flex-direction:column;max-width:900px;margin:0 auto;background:#0b141a;color:#e9edef;box-shadow:0 0 20px rgba(0,0,0,.5)}
 header{background:#202c33;color:#fff;display:flex;align-items:center;gap:10px;padding:10px 12px;padding-top:calc(10px + env(safe-area-inset-top,0px))}
@@ -62,7 +60,6 @@ footer button{font-size:22px;padding:6px}
 <div id="search">
   <div id="logo"><b>S</b><b>e</b><b>a</b><b>r</b><b>c</b><b>h</b></div>
   <input id="sbox" name="search" type="text" placeholder="Search" autocomplete="off" autocapitalize="off" spellcheck="false" autofocus>
-  <button id="sgo">Search</button>
 </div>
 
 <div id="chat">
@@ -111,7 +108,6 @@ function doSearch(){
   } else googleSearch(v);
 }
 $('sbox').addEventListener('keydown', e => { if(e.key==='Enter') doSearch(); });
-$('sgo').onclick = doSearch;
 
 function enter(d){
   me = d.me;
