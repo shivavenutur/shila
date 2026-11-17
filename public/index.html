@@ -41,6 +41,11 @@ footer button{font-size:22px;padding:6px}
 #emogrid{display:grid;grid-template-columns:repeat(8,1fr);height:220px;overflow-y:auto;padding:6px;align-content:start}
 #emogrid button{font-size:24px;padding:4px 0;border-radius:6px}
 #emogrid button:hover{background:#182229}
+#gifp{display:none;position:absolute;left:8px;bottom:62px;width:min(360px,calc(100% - 16px));background:#233138;border-radius:10px;box-shadow:0 4px 18px rgba(0,0,0,.5);z-index:6;overflow:hidden}
+#gifq{width:100%;border:0;padding:12px 14px;font-size:16px;outline:none;background:#2a3942;color:#e9edef}
+#gifgrid{height:260px;overflow-y:auto;columns:2;column-gap:4px;padding:4px}
+#gifgrid img{width:100%;display:block;margin-bottom:4px;border-radius:6px;cursor:pointer;background:#182229}
+#gifnote{font-size:11px;color:#8696a0;text-align:center;padding:4px}
 #chat{position:relative}
 #send{background:#00a884;color:#fff;border-radius:50%;width:42px;height:42px;font-size:18px;padding:0}
 /* calls */
@@ -70,9 +75,11 @@ footer button{font-size:22px;padding:6px}
     <div id="menu"><button id="clr">Clear chat</button><button id="lock">Lock</button></div>
   </header>
   <div id="list"></div>
+  <div id="gifp"><input id="gifq" type="text" placeholder="Search GIFs" autocomplete="off"><div id="gifgrid"></div><div id="gifnote">Powered by GIPHY</div></div>
   <div id="emo"><div id="emotabs"></div><div id="emogrid"></div></div>
   <footer>
     <button id="emoBtn" title="Emoji">😊</button>
+    <button id="gifBtn" title="GIF" style="display:none;font-size:15px;font-weight:700;color:#e9edef">GIF</button>
     <button id="att" title="Attach">📎</button>
     <input type="file" id="file" hidden accept="image/*,video/*,audio/*,.pdf,.doc,.docx,.txt,.zip">
     <input type="text" id="inp" placeholder="Type a message" autocomplete="off">
@@ -108,7 +115,7 @@ function doSearch(){
 $('sbox').addEventListener('keydown', e => { if(e.key==='Enter') doSearch(); });
 
 function enter(d){
-  me = d.me;
+  me = d.me; $('gifBtn').style.display = d.gifs ? '' : 'none';
   $('sbox').value = ''; $('search').style.display = 'none'; $('chat').style.display = 'flex';
   document.title = 'Chat'; resetIdle();
   const other = me === 'A' ? 'B' : 'A';
@@ -136,7 +143,7 @@ function resetIdle(){
   document.addEventListener(ev, resetIdle, { passive:true, capture:true }));
 $('list').addEventListener('scroll', resetIdle, { passive:true });
 function lock(){
-  clearTimeout(idleT); $('emo').style.display = 'none';
+  clearTimeout(idleT); $('emo').style.display = 'none'; $('gifp').style.display = 'none';
   endCall(false); me = null; socket?.close();
   $('chat').style.display = 'none'; $('search').style.display = 'flex'; $('list').innerHTML = '';
   document.title = 'Search'; $('sbox').focus();
@@ -264,6 +271,32 @@ const EMO = {
   $('emo').addEventListener('click', ev => ev.stopPropagation());
   document.addEventListener('click', () => $('emo').style.display = 'none');
   $('send').addEventListener('click', () => $('emo').style.display = 'none');
+})();
+
+/* ---------- GIF picker (needs GIPHY_API_KEY on the server) ---------- */
+(function(){
+  const p = $('gifp'), q = $('gifq'), grid = $('gifgrid'); let t, n = 0;
+  function load(){
+    const my = ++n; grid.textContent = 'Loading…';
+    socket.emit('gifs', q.value, (list) => {
+      if(my !== n) return; grid.textContent = '';
+      if(!list.length){ grid.textContent = 'No GIFs found'; return; }
+      list.forEach(g => {
+        const i = document.createElement('img'); i.src = g.preview; i.loading = 'lazy';
+        i.onclick = () => { socket.emit('msg', { gif: g.url }); p.style.display = 'none'; };
+        grid.appendChild(i);
+      });
+    });
+  }
+  $('gifBtn').onclick = (ev) => {
+    ev.stopPropagation(); $('emo').style.display = 'none';
+    const open = p.style.display === 'block'; p.style.display = open ? 'none' : 'block';
+    if(!open){ q.value = ''; load(); q.focus(); }
+  };
+  q.addEventListener('input', () => { clearTimeout(t); t = setTimeout(load, 350); });
+  p.addEventListener('click', ev => ev.stopPropagation());
+  document.addEventListener('click', () => p.style.display = 'none');
+  $('emoBtn').addEventListener('click', () => p.style.display = 'none');
 })();
 </script>
 </body></html>
