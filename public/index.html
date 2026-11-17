@@ -112,7 +112,8 @@ function enter(d){
   $('sbox').value = ''; $('search').style.display = 'none'; $('chat').style.display = 'flex';
   document.title = 'Chat'; resetIdle();
   const other = me === 'A' ? 'B' : 'A';
-  $('name').textContent = 'User ' + other; $('av').textContent = other;
+  $('name').textContent = other === 'A' ? 'pretighostprincess' : 'grimreapwarrior';
+  $('av').textContent = other === 'A' ? 'P' : 'G';
   setPres(d.presence);
   $('list').innerHTML = ''; d.messages.forEach(addMsg); scrollDown();
   socket.on('msg', (m) => { addMsg(m); scrollDown(); }); // incoming messages don't reset the timer
