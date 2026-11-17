@@ -6,37 +6,43 @@
 <title>Google</title>
 <style>
 *{box-sizing:border-box}
-html,body{height:100%;margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;background:#fff;color:#202124}
+html,body{height:100%;margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;background:#202124;color:#e8eaed;color-scheme:dark}
 button{font:inherit;cursor:pointer;border:0;background:none}
 /* search page */
 #search{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;gap:26px;padding:16px}
-#logo{font-size:64px;font-weight:500;letter-spacing:-2px;color:#4285f4}
-#logo b:nth-child(2){color:#ea4335}#logo b:nth-child(3){color:#fbbc05}#logo b:nth-child(4){color:#4285f4}#logo b:nth-child(5){color:#34a853}#logo b:nth-child(6){color:#ea4335}
-#sbox{width:min(580px,100%);height:46px;border:1px solid #dfe1e5;border-radius:24px;padding:0 20px;font-size:16px;outline:none}
-#sbox:hover,#sbox:focus{box-shadow:0 1px 6px rgba(32,33,36,.28);border-color:transparent}
-#sgo{background:#f8f9fa;border:1px solid #f8f9fa;border-radius:4px;padding:10px 16px;color:#3c4043;font-size:14px}
-#sgo:hover{border-color:#dadce0}
+#logo{font-size:64px;font-weight:500;letter-spacing:-2px;color:#e8eaed}
+#sbox{width:min(580px,100%);height:46px;border:1px solid #5f6368;border-radius:24px;padding:0 20px;font-size:16px;outline:none;background:#303134;color:#e8eaed}
+#sbox:hover,#sbox:focus{box-shadow:0 1px 6px rgba(0,0,0,.6);border-color:#8ab4f8}
 /* chat */
-#chat{display:none;height:100%;height:100dvh;flex-direction:column;max-width:900px;margin:0 auto;background:#efeae2;box-shadow:0 0 20px rgba(0,0,0,.15)}
-header{background:#075e54;color:#fff;display:flex;align-items:center;gap:10px;padding:10px 12px;padding-top:calc(10px + env(safe-area-inset-top,0px))}
-header .av{width:40px;height:40px;border-radius:50%;background:#25d366;display:grid;place-items:center;font-weight:600}
+#chat{display:none;height:100%;height:100dvh;flex-direction:column;max-width:900px;margin:0 auto;background:#0b141a;color:#e9edef;box-shadow:0 0 20px rgba(0,0,0,.5)}
+header{background:#202c33;color:#fff;display:flex;align-items:center;gap:10px;padding:10px 12px;padding-top:calc(10px + env(safe-area-inset-top,0px))}
+header .av{width:40px;height:40px;border-radius:50%;background:#00a884;display:grid;place-items:center;font-weight:600}
 header .who{flex:1;line-height:1.2}header small{opacity:.8}
 header button{color:#fff;font-size:20px;padding:6px 8px;border-radius:50%}
 header button:hover{background:rgba(255,255,255,.15)}
-#menu{display:none;position:absolute;right:10px;top:56px;background:#fff;color:#111;border-radius:6px;box-shadow:0 4px 16px rgba(0,0,0,.25);z-index:5}
-#menu button{display:block;width:100%;text-align:left;padding:12px 20px}#menu button:hover{background:#f0f2f5}
+#menu{display:none;position:absolute;right:10px;top:56px;background:#233138;color:#e9edef;border-radius:6px;box-shadow:0 4px 16px rgba(0,0,0,.5);z-index:5}
+#menu button{display:block;width:100%;text-align:left;padding:12px 20px}#menu button:hover{background:#182229}
 #list{flex:1;overflow-y:auto;padding:14px 10px;display:flex;flex-direction:column;gap:4px}
-.m{max-width:78%;padding:6px 9px;border-radius:8px;background:#fff;align-self:flex-start;box-shadow:0 1px 1px rgba(0,0,0,.13);word-wrap:break-word;white-space:pre-wrap}
-.m.me{background:#d9fdd3;align-self:flex-end}
+.m{max-width:78%;padding:6px 9px;border-radius:8px;background:#202c33;color:#e9edef;align-self:flex-start;box-shadow:0 1px 1px rgba(0,0,0,.3);word-wrap:break-word;white-space:pre-wrap}
+.m.me{background:#005c4b;align-self:flex-end}
 .m img,.m video{max-width:100%;max-height:300px;border-radius:6px;display:block;margin-bottom:4px}
 .m audio{max-width:100%}
-.m .t{font-size:11px;color:#667781;text-align:right;margin-top:2px}
+.m .t{font-size:11px;color:#8696a0;text-align:right;margin-top:2px}
 .m .x{font-size:12px;opacity:.5;padding:0 0 0 8px}.m .x:hover{opacity:1}
-.m a{color:#027eb5}
-footer{display:flex;align-items:center;gap:8px;padding:8px;padding-bottom:calc(8px + env(safe-area-inset-bottom,0px));background:#f0f2f5}
-footer input[type=text]{flex:1;border:0;border-radius:22px;padding:11px 16px;font-size:16px;outline:none}
+.m a{color:#53bdeb}
+footer{display:flex;align-items:center;gap:8px;padding:8px;padding-bottom:calc(8px + env(safe-area-inset-bottom,0px));background:#202c33}
+footer input[type=text]{flex:1;border:0;border-radius:22px;padding:11px 16px;font-size:16px;outline:none;background:#2a3942;color:#e9edef}
+footer input[type=text]::placeholder{color:#8696a0}
 footer button{font-size:22px;padding:6px}
-#send{background:#075e54;color:#fff;border-radius:50%;width:42px;height:42px;font-size:18px;padding:0}
+#emo{display:none;position:absolute;left:8px;bottom:62px;width:min(340px,calc(100% - 16px));background:#233138;border-radius:10px;box-shadow:0 4px 18px rgba(0,0,0,.5);z-index:6;overflow:hidden}
+#emotabs{display:flex;background:#202c33}
+#emotabs button{flex:1;font-size:20px;padding:8px 0;border-bottom:3px solid transparent}
+#emotabs button.on{border-bottom-color:#00a884}
+#emogrid{display:grid;grid-template-columns:repeat(8,1fr);height:220px;overflow-y:auto;padding:6px;align-content:start}
+#emogrid button{font-size:24px;padding:4px 0;border-radius:6px}
+#emogrid button:hover{background:#182229}
+#chat{position:relative}
+#send{background:#00a884;color:#fff;border-radius:50%;width:42px;height:42px;font-size:18px;padding:0}
 /* calls */
 #call{display:none;position:fixed;inset:0;background:#111;z-index:20;flex-direction:column;align-items:center;justify-content:center}
 #remote{width:100%;height:100%;object-fit:cover;background:#111}
@@ -45,14 +51,13 @@ footer button{font-size:22px;padding:6px}
 #cbar{position:absolute;bottom:calc(30px + env(safe-area-inset-bottom,0px));display:flex;gap:18px}
 #cbar button{width:56px;height:56px;border-radius:50%;background:#333;color:#fff;font-size:22px}
 #cbar #hang{background:#e53935}
-#incoming{display:none;position:fixed;left:50%;top:20px;transform:translateX(-50%);background:#fff;border-radius:12px;padding:16px 20px;box-shadow:0 6px 24px rgba(0,0,0,.35);z-index:30;text-align:center}
+#incoming{display:none;position:fixed;left:50%;top:20px;transform:translateX(-50%);background:#233138;color:#e9edef;border-radius:12px;padding:16px 20px;box-shadow:0 6px 24px rgba(0,0,0,.6);z-index:30;text-align:center}
 #incoming button{margin:10px 6px 0;padding:9px 18px;border-radius:20px;color:#fff;font-size:15px}
 </style></head><body>
 
 <div id="search">
   <div id="logo"><b>S</b><b>e</b><b>a</b><b>r</b><b>c</b><b>h</b></div>
   <input id="sbox" name="search" type="text" placeholder="Search" autocomplete="off" autocapitalize="off" spellcheck="false" autofocus>
-  <button id="sgo">Search</button>
 </div>
 
 <div id="chat">
@@ -65,7 +70,9 @@ footer button{font-size:22px;padding:6px}
     <div id="menu"><button id="clr">Clear chat</button><button id="lock">Lock</button></div>
   </header>
   <div id="list"></div>
+  <div id="emo"><div id="emotabs"></div><div id="emogrid"></div></div>
   <footer>
+    <button id="emoBtn" title="Emoji">😊</button>
     <button id="att" title="Attach">📎</button>
     <input type="file" id="file" hidden accept="image/*,video/*,audio/*,.pdf,.doc,.docx,.txt,.zip">
     <input type="text" id="inp" placeholder="Type a message" autocomplete="off">
@@ -99,7 +106,6 @@ function doSearch(){
   } else googleSearch(v);
 }
 $('sbox').addEventListener('keydown', e => { if(e.key==='Enter') doSearch(); });
-$('sgo').onclick = doSearch;
 
 function enter(d){
   me = d.me;
@@ -129,7 +135,7 @@ function resetIdle(){
   document.addEventListener(ev, resetIdle, { passive:true, capture:true }));
 $('list').addEventListener('scroll', resetIdle, { passive:true });
 function lock(){
-  clearTimeout(idleT);
+  clearTimeout(idleT); $('emo').style.display = 'none';
   endCall(false); me = null; socket?.close();
   $('chat').style.display = 'none'; $('search').style.display = 'flex'; $('list').innerHTML = '';
   document.title = 'Search'; $('sbox').focus();
@@ -229,5 +235,34 @@ $('vid').onclick = () => startCall(true);
 $('hang').onclick = () => endCall(true);
 $('mute').onclick = () => { const t = stream?.getAudioTracks()[0]; if(t){ t.enabled = !t.enabled; $('mute').textContent = t.enabled ? '🎤' : '🔇'; } };
 $('cam').onclick = () => { const t = stream?.getVideoTracks()[0]; if(t){ t.enabled = !t.enabled; $('cam').textContent = t.enabled ? '📷' : '🚫'; } };
+
+/* ---------- emoji picker ---------- */
+const EMO = {
+  '😀':'😀 😃 😄 😁 😆 😅 😂 🤣 🥲 😊 😇 🙂 🙃 😉 😌 😍 🥰 😘 😗 😙 😚 😋 😛 😜 🤪 😝 🤑 🤗 🤭 🤫 🤔 🤐 🤨 😐 😑 😶 😏 😒 🙄 😬 😮‍💨 🤥 😔 😪 🤤 😴 😷 🤒 🤕 🤢 🤮 🥵 🥶 🥴 😵 🤯 🤠 🥳 😎 🤓 🧐 😕 😟 🙁 ☹️ 😮 😯 😲 😳 🥺 😦 😧 😨 😰 😥 😢 😭 😱 😖 😣 😞 😓 😩 😫 🥱 😤 😡 😠 🤬 😈 👿 💀 💩 🤡 👻 👽 🤖'.split(' '),
+  '👍':'👍 👎 👌 ✌️ 🤞 🤟 🤘 🤙 👈 👉 👆 👇 ☝️ ✋ 🤚 🖐 🖖 👋 🤝 👏 🙌 👐 🤲 🙏 ✍️ 💪 🦾 🫶 🫡 🫰 🤌 🤏 👀 🧠 👂 👃 👄 🦷 👅'.split(' '),
+  '❤️':'❤️ 🧡 💛 💚 💙 💜 🖤 🤍 🤎 💔 ❣️ 💕 💞 💓 💗 💖 💘 💝 💟 ♥️ 😻 💋 💯 💢 💥 💫 💦 💨 🔥 ✨ 🌟 ⭐ 🎉 🎊 🎈 🎁 🏆 🥇'.split(' '),
+  '🐶':'🐶 🐱 🐭 🐹 🐰 🦊 🐻 🐼 🐨 🐯 🦁 🐮 🐷 🐸 🐵 🙈 🙉 🙊 🐔 🐧 🐦 🦆 🦉 🦄 🐝 🦋 🐢 🐍 🐙 🐬 🐳 🌸 🌹 🌻 🌲 🌴 🍀 🌈 ☀️ 🌙 ⛅ ❄️'.split(' '),
+  '🍕':'🍏 🍎 🍌 🍉 🍇 🍓 🍒 🍑 🥭 🍍 🥑 🌽 🥕 🍞 🧀 🍳 🥞 🍔 🍟 🍕 🌭 🌮 🌯 🍣 🍜 🍝 🍩 🍪 🎂 🍰 🍫 🍬 🍿 ☕ 🍵 🍺 🍷 🥂 🍹'.split(' '),
+  '⚽':'⚽ 🏀 🏈 ⚾ 🎾 🏐 🏉 🎱 🏓 🏸 🥊 🎯 🎮 🎲 🎵 🎶 🎤 🎧 🎬 📷 💻 📱 ☎️ 💡 🔒 🔑 🚗 ✈️ 🚀 🏠 🌍 ⏰ 📌 ✅ ❌ ❓ ❗ 💬'.split(' ')
+};
+(function(){
+  const tabs = $('emotabs'), grid = $('emogrid');
+  function show(k){
+    [...tabs.children].forEach(b => b.classList.toggle('on', b.dataset.k === k));
+    grid.innerHTML = ''; grid.scrollTop = 0;
+    EMO[k].forEach(e => { const b = document.createElement('button'); b.textContent = e; b.onclick = () => ins(e); grid.appendChild(b); });
+  }
+  function ins(e){
+    const i = $('inp'), a = i.selectionStart ?? i.value.length, z = i.selectionEnd ?? a;
+    i.value = i.value.slice(0, a) + e + i.value.slice(z);
+    i.selectionStart = i.selectionEnd = a + e.length; i.focus();
+  }
+  Object.keys(EMO).forEach(k => { const b = document.createElement('button'); b.textContent = k; b.dataset.k = k; b.onclick = (ev) => { ev.stopPropagation(); show(k); }; tabs.appendChild(b); });
+  show(Object.keys(EMO)[0]);
+  $('emoBtn').onclick = (ev) => { ev.stopPropagation(); const p = $('emo'); p.style.display = p.style.display === 'block' ? 'none' : 'block'; };
+  $('emo').addEventListener('click', ev => ev.stopPropagation());
+  document.addEventListener('click', () => $('emo').style.display = 'none');
+  $('send').addEventListener('click', () => $('emo').style.display = 'none');
+})();
 </script>
 </body></html>
