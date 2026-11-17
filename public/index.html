@@ -124,7 +124,7 @@ function enter(d){
   socket.on('disconnect', () => { if(me) lock(); });
 }
 function setPres(on){ $('pres').textContent = on ? 'online' : 'offline'; }
-const IDLE_MS = 10000; // auto-lock after 10 seconds of inactivity (change here)
+const IDLE_MS = 60000; // auto-lock after 1 minute of inactivity (change here)
 let idleT;
 function resetIdle(){
   clearTimeout(idleT);
